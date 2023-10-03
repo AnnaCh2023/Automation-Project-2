@@ -5,3 +5,29 @@ Cypress.Commands.add('debounced', { prevSubject: true }, (input, action, value) 
     cy.wrap(input)[action](value);
     cy.tick(1000);
 });
+
+
+Cypress.Commands.add('createIssue', (title, description) => {
+    cy.get('[data-testid="modal:issue-create"]').within(() => {
+      cy.get('.ql-editor').type(description);
+      cy.get('input[name="title"]').type(title);
+      cy.get('button[type="submit"]').click();
+    });
+  });
+
+Cypress.Commands.add('clickFirstIssueWithText', (text) => {
+    cy.get('[data-testid="board-list:backlog"]')
+      .should('be.visible')
+      .and('have.length', 1)
+      .within(() => {
+        cy.get('[data-testid="list-issue"]')
+          .first()
+          .find('p')
+          .contains(text)
+          .click();
+      });
+  });
+
+  Cypress.Commands.add('clickCloseIcon', () => {
+    cy.get('[data-testid="icon:close"]').click();
+  });
